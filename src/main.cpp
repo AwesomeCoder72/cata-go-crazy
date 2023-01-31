@@ -96,8 +96,9 @@ void shoot_cata(){
 }
 
 void test_cata() {
-  pros::delay(5000);
-  shoot_cata();
+  // pros::delay(5000);
+  // shoot_cata();
+  return;
 }
 
 void spin_cata() {
@@ -330,6 +331,20 @@ void W_SKILLS() {
 
 }
 
+
+void left_crazy_6_disc_auton() {
+  default_constants();
+  // drive into roller
+  chassis.set_drive_pid(-23, 125);
+  pros::delay(300);
+  shoot_cata();
+  chassis.wait_drive();
+
+  chassis.set_drive_pid(8, DRIVE_SPEED);
+  chassis.wait_drive();
+
+}
+
 void left_full_awp_auton() {
   /* one disc in catapult, one high up in intake */
 
@@ -367,8 +382,8 @@ void left_full_awp_auton() {
   pros::delay(250);
 
   // move to center of field
-  chassis.set_drive_pid(2, DRIVE_SPEED);
-  chassis.wait_drive();
+  // chassis.set_drive_pid(2, DRIVE_SPEED);
+  // chassis.wait_drive();
   chassis.set_turn_pid(46, MID_DRIVE_SPEED);
   chassis.wait_drive();
   chassis.set_drive_pid(-34, MID_DRIVE_SPEED);
@@ -837,7 +852,7 @@ void near_four_disc_all_close() {
 
 void initialize() {
   // Print our branding over your terminal :D
-  // ez::print_ez_template();
+  ez::print_ez_template();
   
   pros::delay(500); // Stop the user from doing anything while legacy ports configure.
 
@@ -859,10 +874,11 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.add_autons({
+    Auton("Left 6 Disc", left_crazy_6_disc_auton),
+    Auton("test catapultie", test_cata),
+    Auton("Left Full AWP", left_full_awp_auton),
     Auton("Left Only AWP", left_awp_auton),
     Auton("INSANE SKILLS WORLD RECORD", W_SKILLS),
-    Auton("Left Full AWP", left_full_awp_auton),
-    Auton("test catapultie", test_cata),
     Auton("Far Elims", far_elim),
     Auton("Near Full AWP.", near_full_AWP),
     Auton("Near Four Disc.", near_four_disc),
