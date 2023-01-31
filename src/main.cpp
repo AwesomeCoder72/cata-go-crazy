@@ -331,6 +331,94 @@ void W_SKILLS() {
 
 }
 
+void left_full_awp_four_disc_auton() {
+
+  // set default drivetrain constants
+  default_constants();
+  // drive into roller
+  chassis.set_drive_pid(1.5, DRIVE_SPEED);
+  chassis.wait_drive();
+  // set intake to move -600 ticks (enough to move the roller 1/4 rotation)
+  Intake.move_relative(-600, intake_outtake_velocity);
+  pros::delay(500);
+  // drive backward from roller, and reintake the disc
+  chassis.set_drive_pid(-16.5, DRIVE_SPEED, true);
+  chassis.wait_drive();
+
+  chassis.set_turn_pid(45, TURN_SPEED);
+  chassis.wait_drive();
+
+  chassis.set_drive_pid(-44, DRIVE_SPEED);
+  chassis.wait_drive();
+
+  chassis.set_turn_pid(-35, TURN_SPEED);
+  chassis.wait_drive();
+
+  chassis.set_drive_pid(-3, 110);
+  chassis.wait_until(-1);
+  //pros::delay(50);
+  shoot_cata();
+  chassis.wait_drive();
+
+  pros::delay(400);
+  
+  Intake.move_relative(10000, intake_intake_velocity);
+
+  chassis.set_swing_pid(ez::RIGHT_SWING, -135, 120);
+  chassis.wait_drive();
+
+  chassis.set_drive_pid(15, DRIVE_SPEED);
+  chassis.wait_drive();
+
+  pros::delay(300);
+
+  chassis.set_turn_pid(-50, TURN_SPEED);
+  chassis.wait_drive();
+
+  pros::delay(300);
+
+  Intake.move_velocity(0);
+
+  chassis.set_drive_pid(-10, DRIVE_SPEED);
+  pros::delay(300);
+  shoot_cata();
+  chassis.wait_drive();
+
+  Intake.move_relative(10000, intake_intake_velocity);
+
+  chassis.set_swing_pid(ez::RIGHT_SWING, -135, 60);
+  chassis.wait_drive();
+
+  chassis.set_drive_pid(15, DRIVE_SPEED);
+  chassis.wait_drive();
+
+  chassis.set_swing_pid(ez::RIGHT_SWING, -62, 90);
+  chassis.wait_drive();
+
+  Intake.move_velocity(0);
+
+  shoot_cata();
+
+  chassis.set_turn_pid(-45, TURN_SPEED);
+  chassis.wait_drive();
+
+  chassis.set_drive_pid(18, DRIVE_SPEED);
+  chassis.wait_drive();
+
+  chassis.set_swing_pid(ez::LEFT_SWING, -90, 110);
+  chassis.wait_drive();
+
+  chassis.set_drive_pid(14, DRIVE_SPEED);
+  chassis.wait_drive();
+
+  Intake.move_relative(-600, 600); // spin roller
+  pros::delay(500);
+  chassis.set_drive_pid(-2.5, DRIVE_SPEED);
+  chassis.wait_drive();
+
+  pros::delay(5000);
+
+}
 
 void left_crazy_6_disc_auton() {
   default_constants();
@@ -874,6 +962,7 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.add_autons({
+    Auton("Four Disc AWP", left_full_awp_four_disc_auton),
     Auton("Left 6 Disc", left_crazy_6_disc_auton),
     Auton("test catapultie", test_cata),
     Auton("Left Full AWP", left_full_awp_auton),
