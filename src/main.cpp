@@ -35,6 +35,8 @@
 // #define CATA_SPIN_BUTTON pros::E_CONTROLLER_DIGITAL_UP
 #define CATA_LAUNCH_LIMIT_BUTTON pros::E_CONTROLLER_DIGITAL_R1
 
+#define AUTON_SELECT_BUTTON pros::E_CONTROLLER_DIGITAL_UP
+
 #define EXPANSION_ACTIVATE_1 pros::E_CONTROLLER_DIGITAL_Y
 #define EXPANSION_ACTIVATE_2 pros::E_CONTROLLER_DIGITAL_B
 #define EXPANSION_ACTIVATE_3 pros::E_CONTROLLER_DIGITAL_RIGHT
@@ -335,38 +337,59 @@ void skillz_auton() {
   // set default drivetrain constants 
   default_constants();
   // drive into roller
-  chassis.set_drive_pid(1.5, DRIVE_SPEED);
-  chassis.wait_drive();
-  
-  // FIRST ROLLER
+  chassis.set_drive_pid(4, DRIVE_SPEED);
 
-  Intake.move_relative(-1300, intake_outtake_velocity);
-  pros::delay(800);
+  Intake.move_relative(-1500, intake_outtake_velocity);
+  pros::delay(600);
 
   Intake.move_velocity(0);
 
-  chassis.set_drive_pid(-4, MID_DRIVE_SPEED);
-  chassis.wait_drive();
+  // chassis.wait_drive();
   
-  chassis.set_swing_pid(ez::RIGHT_SWING, 90, 60);
+  // FIRST ROLLER
+
+  // Intake.move_relative(-1300, intake_outtake_velocity);
+  // pros::delay(800);
+
+  // Intake.move_velocity(0);
+
+  chassis.set_drive_pid(-13, MID_DRIVE_SPEED);
   chassis.wait_drive();
+
+  chassis.set_turn_pid(90, TURN_SPEED);
+  chassis.wait_drive();
+
+  // chassis.set_drive_pid(-5.5, MID_DRIVE_SPEED);
+  // chassis.wait_drive();
+  
+  // chassis.set_swing_pid(ez::RIGHT_SWING, 90, 60);
+  // chassis.wait_drive();
 
   Intake.move_relative(10000, intake_intake_velocity);
 
-  chassis.set_drive_pid(33, 80);
+  chassis.set_drive_pid(28, 80);
   chassis.wait_drive();
 
   pros::delay(600);
 
   Intake.move_velocity(0);
 
-  chassis.set_drive_pid(5.5, MID_DRIVE_SPEED);
-  chassis.wait_drive();
+  chassis.set_drive_pid(5, MID_DRIVE_SPEED);
 
-  // SECOND ROLLER
+  pros::delay(300);
 
   Intake.move_relative(-1300, intake_outtake_velocity);
   pros::delay(800);
+
+  Intake.move_velocity(0);
+
+
+  // chassis.wait_drive();
+
+  // SECOND ROLLER
+
+  // Intake.move_relative(-1300, intake_outtake_velocity);
+  // pros::delay(800);
 
 
   chassis.set_drive_pid(-8, MID_DRIVE_SPEED);
@@ -399,14 +422,20 @@ void skillz_auton() {
   chassis.set_turn_pid(-135, TURN_SPEED);
   chassis.wait_drive();
 
-  chassis.set_drive_pid(35, 70, true);
+  chassis.set_drive_pid(35, 55, true);
   chassis.wait_drive();
+
+  pros::delay(300);
 
   chassis.set_turn_pid(-45, TURN_SPEED);
   chassis.wait_drive();
 
   chassis.set_drive_pid(-9, MID_DRIVE_SPEED);
   chassis.wait_drive();
+
+  pros::delay(400);
+
+  Intake.move_velocity(0);
 
   pros::delay(200);
   
@@ -427,28 +456,38 @@ void skillz_auton() {
 
   pros::delay(50);
 
-  Intake.move_relative(10000, intake_intake_velocity);
+  Intake.move_relative(15000, intake_intake_velocity);
 
   pros::delay(500);
 
-  chassis.set_drive_pid(20, 20);
+  chassis.set_drive_pid(22, 17);
   chassis.wait_drive();
 
   pros::delay(500);
 
-  chassis.set_swing_pid(ez::RIGHT_SWING, -180, 50);
+  // chassis.set_swing_pid(ez::RIGHT_SWING, -180, 50);
+
+  chassis.set_turn_pid(-180, TURN_SPEED);
 
   pros::delay(300);
   Intake.move_velocity(0);
   chassis.wait_drive();
-  
-  chassis.set_drive_pid(3, MID_DRIVE_SPEED);
-  chassis.wait_drive();
 
-  // THIRD ROLLER
+
+  
+  chassis.set_drive_pid(11, MID_DRIVE_SPEED);
+
+  pros::delay(500);
 
   Intake.move_relative(-1300, intake_outtake_velocity);
   pros::delay(800);
+
+  // chassis.wait_drive();
+
+  // THIRD ROLLER
+
+  // Intake.move_relative(-1300, intake_outtake_velocity);
+  // pros::delay(800);
 
   chassis.set_drive_pid(-9, MID_DRIVE_SPEED);
   chassis.wait_drive();
@@ -476,14 +515,14 @@ void skillz_auton() {
   chassis.set_drive_pid(46, MID_DRIVE_SPEED, true);
   chassis.wait_drive();
 
-  Intake.move_relative(10000, intake_intake_velocity);
+  Intake.move_relative(15000, intake_intake_velocity);
 
-  pros::delay(200);
+  pros::delay(500);
 
-  chassis.set_drive_pid(25, 20);
+  chassis.set_drive_pid(19, 17);
   chassis.wait_drive();
 
-  chassis.set_drive_pid(-7, MID_DRIVE_SPEED);
+  chassis.set_drive_pid(-1, MID_DRIVE_SPEED);
   chassis.wait_drive();
 
   chassis.set_swing_pid(ez::LEFT_SWING, -90, 60);
@@ -491,13 +530,19 @@ void skillz_auton() {
 
   Intake.move_velocity(0);
 
-  chassis.set_drive_pid(18, MID_DRIVE_SPEED);
-  chassis.wait_drive();
+  chassis.set_drive_pid(23, MID_DRIVE_SPEED);
 
-  // FOURTH ROLLER
+  pros::delay(600);
 
   Intake.move_relative(-1300, intake_outtake_velocity);
   pros::delay(800);
+
+  // chassis.wait_drive();
+
+  // FOURTH ROLLER
+
+  // Intake.move_relative(-1300, intake_outtake_velocity);
+  // pros::delay(800);
 
   chassis.set_drive_pid(-9, MID_DRIVE_SPEED);
   chassis.wait_drive();
@@ -522,15 +567,15 @@ void skillz_auton() {
   chassis.set_turn_pid(-220, TURN_SPEED);
   chassis.wait_drive();
 
-  Intake.move_relative(10000, intake_intake_velocity);
+  Intake.move_relative(12000, intake_intake_velocity);
 
-  chassis.set_drive_pid(32, MID_DRIVE_SPEED);
+  chassis.set_drive_pid(32, 70);
   chassis.wait_drive();
 
   chassis.set_turn_pid(-315, TURN_SPEED);
   chassis.wait_drive();
 
-  chassis.set_drive_pid(35, 70, true);
+  chassis.set_drive_pid(38, 55, true);
   chassis.wait_drive();
 
   chassis.set_turn_pid(-225, TURN_SPEED);
@@ -538,6 +583,8 @@ void skillz_auton() {
 
   chassis.set_drive_pid(-9, MID_DRIVE_SPEED);
   chassis.wait_drive();
+
+  Intake.move_velocity(0);
 
   pros::delay(200);
 
@@ -553,16 +600,16 @@ void skillz_auton() {
   chassis.set_turn_pid(-315, TURN_SPEED);
   chassis.wait_drive();
 
-  chassis.set_drive_pid(40, 80);
+  chassis.set_drive_pid(38, 80);
   chassis.wait_drive();
 
   pros::delay(50);
 
-  Intake.move_relative(10000, intake_intake_velocity);
+  Intake.move_relative(15000, intake_intake_velocity);
 
-  pros::delay(500);
+  pros::delay(750);
 
-  chassis.set_drive_pid(20, 20);
+  chassis.set_drive_pid(20, 17);
   chassis.wait_drive();
 
   chassis.set_turn_pid(-265, TURN_SPEED);
@@ -590,6 +637,8 @@ void skillz_auton() {
 
   chassis.set_turn_pid(-315, TURN_SPEED);
   chassis.wait_drive();
+
+  expand();
 }
 
 void skills_auton() {
@@ -676,7 +725,7 @@ void skills_auton() {
   shoot_cata();
 }
 
-void left_full_awp_four_disc_auton() {
+void left_two_disc_auton() {
 
   // set default drivetrain constants 
   default_constants();
@@ -693,14 +742,64 @@ void left_full_awp_four_disc_auton() {
   chassis.set_turn_pid(45, TURN_SPEED);
   chassis.wait_drive();
 
+  pros::delay(7000);
+
   chassis.set_drive_pid(-44, DRIVE_SPEED, true);
   chassis.wait_drive();
 
   chassis.set_turn_pid(-35, TURN_SPEED);
   chassis.wait_drive();
 
-  chassis.set_drive_pid(-3, 110);
-  chassis.wait_until(-1);
+  chassis.set_drive_pid(-2.5, MID_DRIVE_SPEED);
+  chassis.wait_drive();
+
+  // chassis.set_drive_pid(8, MID_DRIVE_SPEED);
+  // chassis.wait_drive();
+
+  // chassis.set_drive_pid(-9, 127);
+  // chassis.wait_until(-3);
+  //pros::delay(50);
+  shoot_cata();
+  // chassis.wait_drive();
+
+  pros::delay(12000);
+
+  // Intake.move_relative(10000, intake_intake_velocity);
+
+  // pros::delay(1200);
+
+  // shoot_cata();
+
+  // Intake.move_velocity(0);
+
+  // pros::delay(5000);
+}
+
+void left_full_awp_four_disc_auton() {
+
+  // set default drivetrain constants 
+  default_constants();
+  // drive into roller
+  chassis.set_drive_pid(1.5, DRIVE_SPEED);
+  chassis.wait_drive();
+  // set intake to move -600 ticks (enough to move the roller 1/4 rotation)
+  Intake.move_relative(-600, intake_outtake_velocity);
+  pros::delay(500);
+  // drive backward from roller, and reintake the disc
+  chassis.set_drive_pid(-17, DRIVE_SPEED, true);
+  chassis.wait_drive();
+
+  chassis.set_turn_pid(45, TURN_SPEED);
+  chassis.wait_drive();
+
+  chassis.set_drive_pid(-44, DRIVE_SPEED, true);
+  chassis.wait_drive();
+
+  chassis.set_turn_pid(-35, TURN_SPEED);
+  chassis.wait_drive();
+
+  chassis.set_drive_pid(-3, 120);
+  chassis.wait_until(-0.75);
   //pros::delay(50);
   shoot_cata();
   chassis.wait_drive();
@@ -751,13 +850,13 @@ void left_full_awp_four_disc_auton() {
   chassis.set_turn_pid(-135, TURN_SPEED);
   chassis.wait_drive();
 
-  chassis.set_drive_pid(32, DRIVE_SPEED);
+  chassis.set_drive_pid(23, DRIVE_SPEED);
   chassis.wait_drive();
 
   chassis.set_swing_pid(ez::LEFT_SWING, -90, 110);
   chassis.wait_drive();
 
-  chassis.set_drive_pid(8.5, DRIVE_SPEED);
+  chassis.set_drive_pid(14, DRIVE_SPEED);
   chassis.wait_drive();
 
   Intake.move_relative(-600, 600); // spin roller
@@ -957,10 +1056,106 @@ void right_roller_auton() {
 }
 
 void left_elim_auton() {
+  // set default drivetrain constants 
+  default_constants();
+  // drive into roller
+  chassis.set_drive_pid(1.5, DRIVE_SPEED);
+  chassis.wait_drive();
+  // set intake to move -600 ticks (enough to move the roller 1/4 rotation)
+  Intake.move_relative(-600, intake_outtake_velocity);
+  pros::delay(500);
+  // drive backward from roller, and reintake the disc
+  chassis.set_drive_pid(-6, MID_DRIVE_SPEED);
+  chassis.wait_drive();
+
+  chassis.set_turn_pid(45, TURN_SPEED);
+  chassis.wait_drive();
+
+  chassis.set_drive_pid(-32, MID_DRIVE_SPEED, true);
+  chassis.wait_drive();
+
+  chassis.set_turn_pid(-26, TURN_SPEED);
+  chassis.wait_drive();
+
+  // chassis.set_drive_pid(-3, 120);
+  // chassis.wait_until(-0.75);
+  //pros::delay(50);
+
+  chassis.set_drive_pid(-10, MID_DRIVE_SPEED, true);
+  chassis.wait_drive();
+
+  shoot_cata();
+  chassis.wait_drive();
+
+  pros::delay(1400);
+
+  Intake.move_relative(10000, intake_intake_velocity);
+
+  pros::delay(1300);
+
+  shoot_cata();
+
+  pros::delay(200);
+
+  chassis.set_turn_pid(-110, TURN_SPEED);
+  chassis.wait_drive();
+
+  pros::delay(400);
+
+  chassis.set_drive_pid(5.5, 25);
+  chassis.wait_drive();
+
+  chassis.set_turn_pid(-32, TURN_SPEED);
+  chassis.wait_drive();
+
+  pros::delay(900);
+
+  shoot_cata();
+
+  pros::delay(5000);
 
 }
 
 void right_elim_auton() {
+  default_constants();
+
+  // chassis.set_turn_pid(15, TURN_SPEED);
+  // chassis.wait_drive();
+
+  // chassis.set_drive_pid(-38, 125);
+  // // chassis.wait_drive();
+
+  // chassis.wait_until(-31);
+
+  // shoot_cata();
+
+  // chassis.wait_drive();
+
+  // pros::delay(10000);
+
+  chassis.set_drive_pid(-48, MID_DRIVE_SPEED, true);
+  chassis.wait_drive();
+
+  chassis.set_turn_pid(24, TURN_SPEED);
+  chassis.wait_drive();
+
+  shoot_cata();
+
+  pros::delay(1200);
+
+  Intake.move_relative(10000, intake_intake_velocity);
+
+  pros::delay(800);
+
+  shoot_cata();
+
+  pros::delay(200);
+
+  Intake.move_velocity(0);
+
+  chassis.set_turn_pid(-17, TURN_SPEED);
+  chassis.wait_drive();
+
 
 }
 
@@ -1307,7 +1502,7 @@ void initialize() {
 
   Catapult.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
   chassis.set_drive_brake(pros::E_MOTOR_BRAKE_COAST);
-  chassis.set_curve_default(0);
+  chassis.set_curve_default(1.0,0);
   chassis.toggle_modify_curve_with_controller(false);
 
   // These are already defaulted to these buttons, but you can change the left/right curve buttons here!
@@ -1316,9 +1511,12 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.add_autons({
+    Auton("Left Elims", left_elim_auton),
+    Auton("Right Elims", right_elim_auton),
+    Auton("Four Disc AWP", left_full_awp_four_disc_auton),
     Auton("Skillz", skillz_auton),
     Auton("INSANE SKILLS WORLD RECORD", W_SKILLS),
-    Auton("Four Disc AWP", left_full_awp_four_disc_auton),
+    Auton("Left Side Two Disc", left_two_disc_auton),
     Auton("Left 6 Disc", left_crazy_6_disc_auton),
     Auton("test catapultie", test_cata),
     Auton("Left Full AWP", left_full_awp_auton),
@@ -1344,10 +1542,17 @@ void initialize() {
   chassis.initialize();
   ez::as::initialize();
 
-  pros::delay(250);
+  pros::lcd::register_btn0_cb(ez::as::page_down);
+  pros::lcd::register_btn2_cb(ez::as::page_up);
+
+  // pros::delay(250);
+
+  // while (! controller.get_digital(AUTON_SELECT_BUTTON)) {
+  //   pros::delay(10);
+  // }
   
-  pros::Task cata_limit_switch_task(cata_limit_switch_task_function);
-  pros::Task test_auton_selector_brain_task(test_auton_selector_brain_task_function);
+  // pros::Task cata_limit_switch_task(cata_limit_switch_task_function);
+  // pros::Task test_auton_selector_brain_task(test_auton_selector_brain_task_function);
   
 
   // pros::delay(500);
@@ -1449,6 +1654,14 @@ void opcontrol() {
   }
 
   chassis.set_drive_brake(pros::E_MOTOR_BRAKE_COAST);
+
+  // if (! auton_finished) {
+    while (! controller.get_digital(AUTON_SELECT_BUTTON)) {
+      pros::delay(10);
+    }
+  // }
+  
+  pros::Task cata_limit_switch_task(cata_limit_switch_task_function);
 
   while (true) {
 
