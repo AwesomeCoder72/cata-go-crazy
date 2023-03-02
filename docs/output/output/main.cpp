@@ -51,8 +51,6 @@ pros::ADIDigitalIn CataLimit('G');
 
 pros::ADIDigitalOut ExpansionMech('B');
 
-pros::ADIDigitalOut PistonBoost('C');
-
 /////
 // For instalattion, upgrading, documentations and tutorials, check out website!
 // https://ez-robotics.github.io/EZ-Template/
@@ -77,43 +75,26 @@ void expand() {
   ExpansionMech.set_value(true);
 }
 
-void piston_boost(bool value = true) {
-  PistonBoost.set_value(value);
-}
-
 bool cata_limit_shoot = false;
 bool cata_limit_prime = false;
 
-bool cata_limit_piston = false;
-
 void cata_limit_switch_task_function() {
   while (true) {
-      if (CataLimit.get_value() == 1 && !cata_limit_shoot && !cata_limit_piston){ 
+      if (CataLimit.get_value() == 1 && !cata_limit_shoot){ 
         Catapult.move_velocity(0);
       } else {
         Catapult.move_velocity(100);
-        if (cata_limit_piston) {
-          piston_boost();
-          pros::delay(200);
-          piston_boost(false);
-          pros::delay(650);
-          cata_limit_piston = false;
-
-        } else if (cata_limit_shoot) {
+        if (cata_limit_shoot) {
           pros::delay(750);
-          cata_limit_shoot = false;
         }
+        cata_limit_shoot = false;
       }
     }
     pros::delay(ez::util::DELAY_TIME);
   }
 
-void shoot_cata(bool piston_boost = false){
-  if (piston_boost) {
-    cata_limit_piston = true;
-  } else {
-    cata_limit_shoot = true;
-  }
+void shoot_cata(){
+  cata_limit_shoot = true;
 }
 
 void test_cata() {
@@ -1868,7 +1849,7 @@ void opcontrol() {
       launch_limit_pressed = false;
     }
     if (launch_limit_pressed && ! launch_limit_pressed_last) {
-      shoot_cata(true);
+      shoot_cata();
     }
     launch_limit_pressed_last = launch_limit_pressed;
 
