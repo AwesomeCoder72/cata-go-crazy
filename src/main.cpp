@@ -8,6 +8,7 @@
 #include "pros/motors.h"
 #include "pros/motors.hpp"
 #include "pros/rtos.hpp"
+#include <type_traits>
 
 
 
@@ -36,6 +37,8 @@
 #define CATA_LAUNCH_LIMIT_BUTTON pros::E_CONTROLLER_DIGITAL_R1
 
 #define AUTON_SELECT_BUTTON pros::E_CONTROLLER_DIGITAL_UP
+
+#define SHIFT_KEY pros::E_CONTROLLER_DIGITAL_R2
 
 #define EXPANSION_ACTIVATE_1 pros::E_CONTROLLER_DIGITAL_Y
 #define EXPANSION_ACTIVATE_2 pros::E_CONTROLLER_DIGITAL_B
@@ -91,17 +94,22 @@ void cata_limit_switch_task_function() {
       if (CataLimit.get_value() == 1 && !cata_limit_shoot && !cata_limit_piston){ 
         Catapult.move_velocity(0);
       } else {
-        Catapult.move_velocity(100);
         if (cata_limit_piston) {
           piston_boost();
-          pros::delay(200);
+          pros::delay(25);
+          Catapult.move_velocity(100); 
+          pros::delay(175);
           piston_boost(false);
           pros::delay(650);
           cata_limit_piston = false;
 
         } else if (cata_limit_shoot) {
+          Catapult.move_velocity(100);
           pros::delay(750);
           cata_limit_shoot = false;
+        } else {
+          Catapult.move_velocity(100);
+          // pros::delay(750);
         }
       }
     }
@@ -349,6 +357,52 @@ void W_SKILLS() {
 
 
   pros::delay(12500);
+
+}
+
+void left_full_awp_8_disc_auton() {
+  default_constants();
+
+  chassis.set_drive_pid(4, MID_DRIVE_SPEED);
+
+  Intake.move_relative(-1500, intake_outtake_velocity);
+  pros::delay(400);
+
+  Intake.move_velocity(0);
+
+  chassis.set_drive_pid(-15, MID_DRIVE_SPEED, true);
+  chassis.wait_drive();
+
+  chassis.set_turn_pid(-10, TURN_SPEED);
+  chassis.wait_drive();
+
+  shoot_cata(true);
+  pros::delay(300);
+
+  chassis.set_drive_pid(9, MID_DRIVE_SPEED);
+  chassis.wait_drive();
+
+  chassis.set_turn_pid(-135, TURN_SPEED);
+  chassis.wait_drive();
+
+  Intake.move_relative(10000, intake_intake_velocity);
+
+  chassis.set_drive_pid(44, 65, true);
+  chassis.wait_drive();
+
+  pros::delay(300);
+
+  chassis.set_turn_pid(-36, TURN_SPEED);
+  chassis.wait_drive();
+
+  Intake.move_velocity(0);
+
+  chassis.set_drive_pid(-11, MID_DRIVE_SPEED);
+  chassis.wait_drive();
+
+  pros::delay(200);
+
+  shoot_cata(true);
 
 }
 
@@ -1696,9 +1750,9 @@ void initialize() {
   // These are already defaulted to these buttons, but you can change the left/right curve buttons here!
   // chassis.set_left_curve_buttons (pros::E_CONTROLLER_DIGITAL_LEFT, pros::E_CONTROLLER_DIGITAL_RIGHT); // If using tank, only the left side is used. 
   // chassis.set_right_curve_buttons(pros::E_CONTROLLER_DIGITAL_Y,    pros::E_CONTROLLER_DIGITAL_A);
-
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.add_autons({
+    Auton("8 disc", left_full_awp_8_disc_auton),
     Auton("roller ez", roller),
     Auton("Left Two Disc Part 2", left_two_disc_auton_part_two),
     Auton("Left Elims part two", left_elim_auton_part_two),
@@ -1835,6 +1889,8 @@ bool outtake_pressed_last = false;
 bool spin_cata_pressed = false;
 bool spin_cata_pressed_last = false;
 
+bool shift_key_pressing = false;
+
 void opcontrol() {
   // printf("something, anything at all.");
   // This is preference to what you like to drive on.
@@ -1862,15 +1918,23 @@ void opcontrol() {
     chassis.arcade_flipped(ez::SPLIT); // Flipped split arcade
     // chassis.arcade_flipped(ez::SINGLE); // Flipped single arcade
 
+    if (controller.get_digital(SHIFT_KEY)) {
+      shift_key_pressing = true;
+    } else {
+      shift_key_pressing = false;
+    }
+
     if (controller.get_digital(CATA_LAUNCH_LIMIT_BUTTON)) {
       launch_limit_pressed = true;
     } else {
       launch_limit_pressed = false;
     }
     if (launch_limit_pressed && ! launch_limit_pressed_last) {
-      shoot_cata(true);
+      if (shift_key_pressing) shoot_cata(true);
+      else shoot_cata(false);
     }
     launch_limit_pressed_last = launch_limit_pressed;
+
 
     if (Catapult.get_position()) { 
       cata_moving = false;
