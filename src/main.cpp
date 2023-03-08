@@ -53,6 +53,7 @@ pros::Motor Intake(INTAKE_MOTOR_PORT, MOTOR_GEARSET_18, false);
 pros::ADIDigitalIn CataLimit('G');
 
 pros::ADIDigitalOut ExpansionMech('B');
+//pros::ADIDigitalOut SideExpansionMech('D');
 
 pros::ADIDigitalOut PistonBoost('C');
 
@@ -78,6 +79,7 @@ int intake_outtake_velocity = 200;
  
 void expand() {
   ExpansionMech.set_value(true);
+  //SideExpansionMech.set_value(true);
 }
 
 void piston_boost(bool value = true) {
@@ -360,7 +362,7 @@ void W_SKILLS() {
 
 }
 
-void left_full_awp_8_disc_auton() {
+void left_half_awp_8_disc_auton() {
   default_constants();
 
   chassis.set_drive_pid(4, MID_DRIVE_SPEED);
@@ -373,7 +375,7 @@ void left_full_awp_8_disc_auton() {
   chassis.set_drive_pid(-15, MID_DRIVE_SPEED, true);
   chassis.wait_drive();
 
-  chassis.set_turn_pid(-10, TURN_SPEED);
+  chassis.set_turn_pid(-13, TURN_SPEED);
   chassis.wait_drive();
 
   shoot_cata(true);
@@ -382,12 +384,16 @@ void left_full_awp_8_disc_auton() {
   chassis.set_drive_pid(9, MID_DRIVE_SPEED);
   chassis.wait_drive();
 
+  // pros::delay(300);
+
   chassis.set_turn_pid(-135, TURN_SPEED);
   chassis.wait_drive();
 
+  // pros::delay(300);
+
   Intake.move_relative(10000, intake_intake_velocity);
 
-  chassis.set_drive_pid(44, 65, true);
+  chassis.set_drive_pid(44, 60, true);
   chassis.wait_drive();
 
   pros::delay(300);
@@ -403,6 +409,131 @@ void left_full_awp_8_disc_auton() {
   pros::delay(200);
 
   shoot_cata(true);
+
+  pros::delay(200);
+
+  chassis.set_turn_pid(-65, TURN_SPEED);
+  chassis.wait_drive();
+
+  chassis.set_drive_pid(18, MID_DRIVE_SPEED);
+  chassis.wait_drive();
+
+  Intake.move_relative(10000, intake_intake_velocity);
+  chassis.set_swing_pid(ez::LEFT_SWING, -10, 90);
+  chassis.wait_drive();
+
+  chassis.set_drive_pid(32, 70);
+  chassis.wait_drive();
+
+  chassis.set_turn_pid(-25, TURN_SPEED);
+  chassis.wait_drive();
+
+  chassis.set_drive_pid(-50, DRIVE_SPEED);
+  chassis.wait_drive();
+
+  chassis.set_turn_pid(-38, TURN_SPEED);
+  chassis.wait_drive();
+
+  Intake.move_velocity(0);
+
+  pros::delay(50);
+  shoot_cata(true);
+}
+
+void left_full_awp_8_disc_auton() {
+  default_constants();
+
+  chassis.set_drive_pid(4, MID_DRIVE_SPEED);
+
+  Intake.move_relative(-1500, intake_outtake_velocity);
+  pros::delay(400);
+
+  Intake.move_velocity(0);
+
+  chassis.set_drive_pid(-15, MID_DRIVE_SPEED, true);
+  chassis.wait_drive();
+
+  chassis.set_turn_pid(-13, TURN_SPEED);
+  chassis.wait_drive();
+
+  shoot_cata(true);
+  pros::delay(300);
+
+  chassis.set_drive_pid(9, MID_DRIVE_SPEED);
+  chassis.wait_drive();
+
+  // pros::delay(300);
+
+  chassis.set_turn_pid(-135, TURN_SPEED);
+  chassis.wait_drive();
+
+  // pros::delay(300);
+
+  Intake.move_relative(10000, intake_intake_velocity);
+
+  chassis.set_drive_pid(44, 60, true);
+  chassis.wait_drive();
+
+  pros::delay(300);
+
+  chassis.set_turn_pid(-36, TURN_SPEED);
+  chassis.wait_drive();
+
+  Intake.move_velocity(0);
+
+  chassis.set_drive_pid(-11, MID_DRIVE_SPEED);
+  chassis.wait_drive();
+
+  pros::delay(200);
+
+  shoot_cata(true);
+
+  pros::delay(200);
+
+  chassis.set_drive_pid(10, MID_DRIVE_SPEED);
+  chassis.wait_drive();
+
+  chassis.set_turn_pid(-135, 80);
+  chassis.wait_drive();
+
+  Intake.move_relative(10000, intake_intake_velocity);
+
+  chassis.set_drive_pid(64, 75, true);
+  chassis.wait_drive();
+
+  Intake.move_velocity(0);
+
+  chassis.set_turn_pid(-136, 80);
+  chassis.wait_drive();
+
+  chassis.set_drive_pid(24, 85);
+  
+  chassis.wait_until(19);
+
+  Intake.move_relative(-10000, intake_outtake_velocity);
+  pros::delay(400);
+
+  Intake.move_velocity(0);
+
+  chassis.set_turn_pid(-136, TURN_SPEED);
+  chassis.wait_drive();
+
+  chassis.set_drive_pid(-62, DRIVE_SPEED);
+  chassis.wait_drive();
+
+  Intake.move_relative(10000, intake_intake_velocity);
+
+  chassis.set_turn_pid(-49, TURN_SPEED);
+  chassis.wait_drive();
+
+  Intake.move_velocity(0);
+
+  chassis.set_drive_pid(-10, MID_DRIVE_SPEED);
+  chassis.wait_drive();
+
+  shoot_cata(true);
+
+
 
 }
 
@@ -1752,6 +1883,7 @@ void initialize() {
   // chassis.set_right_curve_buttons(pros::E_CONTROLLER_DIGITAL_Y,    pros::E_CONTROLLER_DIGITAL_A);
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.add_autons({
+    Auton("8 disc left only", left_half_awp_8_disc_auton),
     Auton("8 disc", left_full_awp_8_disc_auton),
     Auton("roller ez", roller),
     Auton("Left Two Disc Part 2", left_two_disc_auton_part_two),
@@ -1785,6 +1917,7 @@ void initialize() {
 
   // // Initialize chassis and auton selector
   chassis.initialize();
+  chassis.imu_calibrate();
   ez::as::initialize();
 
   pros::lcd::register_btn0_cb(ez::as::page_down);
