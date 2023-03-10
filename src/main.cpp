@@ -53,7 +53,7 @@ pros::Motor Intake(INTAKE_MOTOR_PORT, MOTOR_GEARSET_18, false);
 pros::ADIDigitalIn CataLimit('G');
 
 pros::ADIDigitalOut ExpansionMech('B');
-//pros::ADIDigitalOut SideExpansionMech('D');
+pros::ADIDigitalOut SideExpansionMech('D');
 
 pros::ADIDigitalOut PistonBoost('C');
 
@@ -79,7 +79,7 @@ int intake_outtake_velocity = 200;
  
 void expand() {
   ExpansionMech.set_value(true);
-  //SideExpansionMech.set_value(true);
+  SideExpansionMech.set_value(true);
 }
 
 void piston_boost(bool value = true) {
@@ -360,6 +360,30 @@ void W_SKILLS() {
 
   pros::delay(12500);
 
+}
+
+void right_half_awp_8_disc_auton() {
+  default_constants();
+
+  chassis.set_turn_pid(17, MID_DRIVE_SPEED);
+  chassis.wait_drive();
+
+  chassis.set_drive_pid(-9, MID_DRIVE_SPEED);
+  chassis.wait_drive();
+
+  pros::delay(250);
+
+  shoot_cata(true);
+  pros::delay(500);
+
+  chassis.set_turn_pid(-45, MID_DRIVE_SPEED);
+  chassis.wait_drive();
+
+  chassis.set_drive_pid(14, MID_DRIVE_SPEED);
+}
+
+string new_tank() {
+  return "what carti do";
 }
 
 void left_half_awp_8_disc_auton() {
@@ -1883,6 +1907,7 @@ void initialize() {
   // chassis.set_right_curve_buttons(pros::E_CONTROLLER_DIGITAL_Y,    pros::E_CONTROLLER_DIGITAL_A);
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.add_autons({
+    Auton("8 disc right only,", right_half_awp_8_disc_auton),
     Auton("8 disc left only", left_half_awp_8_disc_auton),
     Auton("8 disc", left_full_awp_8_disc_auton),
     Auton("roller ez", roller),
