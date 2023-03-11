@@ -485,7 +485,7 @@ void left_full_awp_8_disc_auton() {
   chassis.wait_drive();
 
   shoot_cata(true);
-  pros::delay(300);
+  pros::delay(200);
 
   chassis.set_drive_pid(9, MID_DRIVE_SPEED);
   chassis.wait_drive();
@@ -534,16 +534,16 @@ void left_full_awp_8_disc_auton() {
   chassis.set_turn_pid(-136, 80);
   chassis.wait_drive();
 
-  chassis.set_drive_pid(24, 85);
+  chassis.set_drive_pid(26, 85);
   
-  chassis.wait_until(19);
+  chassis.wait_until(21);
 
   Intake.move_relative(-10000, intake_outtake_velocity);
   pros::delay(400);
 
   Intake.move_velocity(0);
 
-  chassis.set_turn_pid(-136, TURN_SPEED);
+  chassis.set_turn_pid(-134, TURN_SPEED);
   chassis.wait_drive();
 
   chassis.set_drive_pid(-62, DRIVE_SPEED);
@@ -2095,7 +2095,8 @@ void opcontrol() {
       pros::delay(10);
     }
   // }
-  
+
+
   pros::Task cata_limit_switch_task(cata_limit_switch_task_function);
 
   while (true) {
