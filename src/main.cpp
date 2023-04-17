@@ -40,6 +40,8 @@
 
 #define SHIFT_KEY pros::E_CONTROLLER_DIGITAL_R2
 
+#define ACTUATE_INTAKE_BUTTON pros::E_CONTROLLER_DIGITAL_X
+
 #define EXPANSION_ACTIVATE_1 pros::E_CONTROLLER_DIGITAL_Y
 #define EXPANSION_ACTIVATE_2 pros::E_CONTROLLER_DIGITAL_B
 #define EXPANSION_ACTIVATE_3 pros::E_CONTROLLER_DIGITAL_RIGHT
@@ -52,8 +54,9 @@ pros::Motor Intake(INTAKE_MOTOR_PORT, MOTOR_GEARSET_18, false);
 
 pros::ADIDigitalIn CataLimit('G');
 
-pros::ADIDigitalOut ExpansionMech('B');
-pros::ADIDigitalOut SideExpansionMech('D');
+pros::ADIDigitalOut ExpansionMech('H'); // wrong
+pros::ADIDigitalOut SideExpansionMech('F'); // wrong
+pros::ADIDigitalOut IntakeActuator('D');
 
 pros::ADIDigitalOut PistonBoost('C');
 
@@ -86,6 +89,13 @@ void piston_boost(bool value = true) {
   PistonBoost.set_value(value);
 }
 
+bool intake_actuated_value = false;
+
+void actuate_intake(bool value) {
+  IntakeActuator.set_value(value);
+  intake_actuated_value = value;
+}
+
 bool cata_limit_shoot = false;
 bool cata_limit_prime = false;
 
@@ -98,11 +108,11 @@ void cata_limit_switch_task_function() {
       } else {
         if (cata_limit_piston) {
           piston_boost();
-          pros::delay(25);
+          pros::delay(20);
           Catapult.move_velocity(100); 
           pros::delay(175);
           piston_boost(false);
-          pros::delay(650);
+          pros::delay(600);
           cata_limit_piston = false;
 
         } else if (cata_limit_shoot) {
@@ -425,7 +435,7 @@ void left_half_awp_8_disc_auton() {
 
   pros::delay(300);
 
-  chassis.set_turn_pid(-36, TURN_SPEED);
+  chassis.set_turn_pid(-35, TURN_SPEED);
   chassis.wait_drive();
 
   Intake.move_velocity(0);
@@ -446,7 +456,7 @@ void left_half_awp_8_disc_auton() {
   chassis.wait_drive();
 
   Intake.move_relative(10000, intake_intake_velocity);
-  chassis.set_swing_pid(ez::LEFT_SWING, -10, 90);
+  chassis.set_swing_pid(ez::LEFT_SWING, -5, 90);
   chassis.wait_drive();
 
   chassis.set_drive_pid(32, 70);
@@ -455,7 +465,7 @@ void left_half_awp_8_disc_auton() {
   chassis.set_turn_pid(-25, TURN_SPEED);
   chassis.wait_drive();
 
-  chassis.set_drive_pid(-50, DRIVE_SPEED);
+  chassis.set_drive_pid(-48, DRIVE_SPEED);
   chassis.wait_drive();
 
   chassis.set_turn_pid(-38, TURN_SPEED);
@@ -1937,9 +1947,9 @@ void initialize() {
   // chassis.set_right_curve_buttons(pros::E_CONTROLLER_DIGITAL_Y,    pros::E_CONTROLLER_DIGITAL_A);
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.add_autons({
+    Auton("8 disc left only", left_half_awp_8_disc_auton),
     Auton("Skillz", skillz_auton),
     Auton("8 disc right only,", right_half_awp_8_disc_auton),
-    Auton("8 disc left only", left_half_awp_8_disc_auton),
     Auton("8 disc", left_full_awp_8_disc_auton),
     Auton("roller ez", roller),
     Auton("Left Two Disc Part 2", left_two_disc_auton_part_two),
@@ -2077,6 +2087,9 @@ bool outtake_pressed_last = false;
 bool spin_cata_pressed = false;
 bool spin_cata_pressed_last = false;
 
+bool actuate_intake_pressed = false;
+bool actuate_intake_pressed_last = false;
+
 bool shift_key_pressing = false;
 
 void opcontrol() {
@@ -2155,6 +2168,19 @@ void opcontrol() {
         controller.get_digital(EXPANSION_ACTIVATE_4)) {
           expand();
       }
+
+    if (controller.get_digital(ACTUATE_INTAKE_BUTTON)) {
+      actuate_intake_pressed = true;
+    } else {
+      actuate_intake_pressed = false;
+    }
+
+    if (actuate_intake_pressed && ! actuate_intake_pressed_last) {
+      if (!intake_actuated_value) actuate_intake(true);
+      else actuate_intake(false);
+    }
+
+    actuate_intake_pressed_last = actuate_intake_pressed;
 
     // if (controller.get_digital(CATA_SPIN_BUTTON)) {
     //   spin_cata_pressed = true;
